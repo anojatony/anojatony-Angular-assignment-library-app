@@ -3,8 +3,6 @@
 
 const express=require('express');
 const app = new express();
-const flash = require('connect-flash');
-const session = require('express-session');
 const multer = require('multer');
 const cors=require('cors');
 const jwt=require('jsonwebtoken');
@@ -25,31 +23,9 @@ app.use(cors());
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()); 
 
-//express session
-app.use(session({
-    secret : 'secret',
-    resave : true,
-    saveUninitialized : true
-   }));
-
-
-//use flash
-   app.use(flash());
-   app.use((req,res,next)=> {
-     res.locals.success_msg = req.flash('success_msg');
-     res.locals.error_msg = req.flash('error_msg');
-     res.locals.error  = req.flash('error');
-     next();
-   })
 
 //middleware function..static
 app.use(express.static('./public'));
-
-
-// setting ejs    
-app.set('view engine','ejs');  
-app.set('views','./src/views');
-
 
 
 // multer setup
@@ -112,6 +88,7 @@ app.get('/books',function(req,res){
         })
     })
 
+
  // addbook
 app.post('/addbook',verifyToken,upload.single('image'),function (req,res){
     res.header("Access-Control-Allow-Origin","*")
@@ -128,6 +105,7 @@ var book = Bookdata(item);
 book.save();
 })
 
+
 //getting id
 app.get('/book/:id',  (req, res) => {
   
@@ -137,6 +115,7 @@ app.get('/book/:id',  (req, res) => {
         res.send(book);
     });
 })
+
 
 //updatebook
 app.put('/updatebook',upload.single('image'),(req,res)=>{
@@ -160,6 +139,7 @@ app.put('/updatebook',upload.single('image'),(req,res)=>{
  })
 })
 
+
 //delete book
 app.delete('/delete/:id',(req,res)=>{
    
@@ -171,6 +151,7 @@ app.delete('/delete/:id',(req,res)=>{
   })
 })
          
+// ..................................................
 
 
  //author
@@ -197,6 +178,7 @@ var author = Authordata(item);
 author.save();
 })
 
+
 //getting id
 app.get('/author/:id',  (req, res) => {
   
@@ -206,6 +188,7 @@ app.get('/author/:id',  (req, res) => {
         res.send(author);
     });
 })
+
 
 //update author
 app.put('/updateauthor',upload.single('image'),(req,res)=>{
@@ -225,6 +208,7 @@ app.put('/updateauthor',upload.single('image'),(req,res)=>{
      res.send();
  })
 })
+
 
 //delete author
 app.delete('/deleteauthor/:id',(req,res)=>{
@@ -296,6 +280,7 @@ app.post('/login', (req, res) => {
       }
     
   })
+  
 
 //port
 
